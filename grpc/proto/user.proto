@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package boilerplate.v1;
+
+option go_package = "go-api-boilerplate/grpc/proto;proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// UserService provides user management operations
+service UserService {
+  // GetUser retrieves a user by ID
+  rpc GetUser(GetUserRequest) returns (User);
+  
+  // ListUsers retrieves a list of users with pagination
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  
+  // CreateUser creates a new user
+  rpc CreateUser(CreateUserRequest) returns (User);
+  
+  // UpdateUser updates an existing user
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  
+  // DeleteUser deletes a user
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+  
+  // GetUserByEmail retrieves a user by email
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User);
+  
+  // StreamUsers streams users in real-time
+  rpc StreamUsers(StreamUsersRequest) returns (stream User);
+}
+
+// User represents a user in the system
+message User {
+  uint64 id = 1;
+  string email = 2;
+  string name = 3;
+  string avatar = 4;
+  string role = 5;
+  bool is_active = 6;
+  bool email_verified = 7;
+  google.protobuf.Timestamp email_verified_at = 8;
+  google.protobuf.Timestamp last_login_at = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// GetUserRequest is the request for GetUser
+message GetUserRequest {
+  uint64 id = 1;
+}
+
+// GetUserByEmailRequest is the request for GetUserByEmail
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+// ListUsersRequest is the request for ListUsers
+message ListUsersRequest {
+  int32 page = 1;
+  int32 per_page = 2;
+  string sort_by = 3;
+  string sort_order = 4;
+  UserFilter filter = 5;
+}
+
+// UserFilter provides filtering options for listing users
+message UserFilter {
+  string search = 1;
+  string role = 2;
+  bool is_active = 3;
+  bool email_verified = 4;
+}
+
+// ListUsersResponse is the response for ListUsers
+message ListUsersResponse {
+  repeated User users = 1;
+  PaginationMeta pagination = 2;
+}
+
+// PaginationMeta contains pagination metadata
+message PaginationMeta {
+  int32 page = 1;
+  int32 per_page = 2;
+  int64 total = 3;
+  int32 total_pages = 4;
+  bool has_next = 5;
+  bool has_prev = 6;
+}
+
+// CreateUserRequest is the request for CreateUser
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+  string name = 3;
+  string role = 4;
+}
+
+// UpdateUserRequest is the request for UpdateUser
+message UpdateUserRequest {
+  uint64 id = 1;
+  string name = 2;
+  string avatar = 3;
+  string role = 4;
+  bool is_active = 5;
+  bool email_verified = 6;
+}
+
+// DeleteUserRequest is the request for DeleteUser
+message DeleteUserRequest {
+  uint64 id = 1;
+}
+
+// StreamUsersRequest is the request for StreamUsers
+message StreamUsersRequest {
+  UserFilter filter = 1;
+}

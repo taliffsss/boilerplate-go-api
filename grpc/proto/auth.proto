@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package boilerplate.v1;
+
+option go_package = "go-api-boilerplate/grpc/proto;proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// AuthService provides authentication operations
+service AuthService {
+  // Login authenticates a user and returns tokens
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // Register creates a new user account
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  
+  // RefreshToken refreshes authentication tokens
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  
+  // Logout invalidates user tokens
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+  
+  // ChangePassword changes user password
+  rpc ChangePassword(ChangePasswordRequest) returns (google.protobuf.Empty);
+  
+  // ForgotPassword initiates password reset
+  rpc ForgotPassword(ForgotPasswordRequest) returns (google.protobuf.Empty);
+  
+  // ResetPassword resets user password with token
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty);
+  
+  // VerifyEmail verifies user email address
+  rpc VerifyEmail(VerifyEmailRequest) returns (google.protobuf.Empty);
+  
+  // ValidateToken validates an access token
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+// LoginRequest is the request for Login
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+// LoginResponse is the response for Login
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string token_type = 3;
+  int64 expires_in = 4;
+  UserInfo user = 5;
+}
+
+// RegisterRequest is the request for Register
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string confirm_password = 3;
+  string name = 4;
+}
+
+// RegisterResponse is the response for Register
+message RegisterResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string token_type = 3;
+  int64 expires_in = 4;
+  UserInfo user = 5;
+}
+
+// RefreshTokenRequest is the request for RefreshToken
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+// RefreshTokenResponse is the response for RefreshToken
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string token_type = 3;
+  int64 expires_in = 4;
+}
+
+// LogoutRequest is the request for Logout
+message LogoutRequest {
+  string access_token = 1;
+}
+
+// ChangePasswordRequest is the request for ChangePassword
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+  string confirm_new_password = 3;
+}
+
+// ForgotPasswordRequest is the request for ForgotPassword
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+// ResetPasswordRequest is the request for ResetPassword
+message ResetPasswordRequest {
+  string token = 1;
+  string new_password = 2;
+  string confirm_password = 3;
+}
+
+// VerifyEmailRequest is the request for VerifyEmail
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+// ValidateTokenRequest is the request for ValidateToken
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+// ValidateTokenResponse is the response for ValidateToken
+message ValidateTokenResponse {
+  bool valid = 1;
+  UserInfo user = 2;
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// UserInfo represents basic user information
+message UserInfo {
+  uint64 id = 1;
+  string email = 2;
+  string name = 3;
+  string role = 4;
+  bool is_active = 5;
+  bool email_verified = 6;
+}
